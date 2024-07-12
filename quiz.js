@@ -8,19 +8,19 @@ function showQuestion() {
     const questions = `
         <div class="mcqList">
             <label>Q.${Q}</label><br><br>
-            <input type="radio" name="ans${currentQuestion}" value=${a}>
+            <input type="radio" name="ans${currentQuestion}" value="${a}">
             <label>${a}</label><br><br>
-            <input type="radio" name="ans${currentQuestion}" value=${b}>
+            <input type="radio" name="ans${currentQuestion}" value="${b}">
             <label>${b}</label><br><br>
-            <input type="radio" name="ans${currentQuestion}" value=${c}>
+            <input type="radio" name="ans${currentQuestion}" value="${c}">
             <label>${c}</label><br><br>
-            <input type="radio" name="ans${currentQuestion}" value=${d}>
+            <input type="radio" name="ans${currentQuestion}" value="${d}">
             <label>${d}</label><br><br>
         </div>`;
 
     const page = document.querySelector('.mcq');
     page.innerHTML = questions;
-    document.querySelector(".page-no").innerHTML=`<p>${currentQuestion+1}/${mcqs.length}</p>`;
+    document.querySelector(".page-no").innerHTML = `<p>${currentQuestion + 1}/${mcqs.length}</p>`;
 
     const radioButtons = page.querySelectorAll(`input[name="ans${currentQuestion}"]`);
     radioButtons.forEach(radio => {
@@ -33,14 +33,30 @@ function checkAnswer(selected) {
     if (selected === correctAnswer) {
         score++;
     }
-    currentQuestion++;
+}
 
-    if (currentQuestion < mcqs.length) {
-        showQuestion();
-    } else {
-        const quizContainer = document.querySelector(".quiz-container");
-        quizContainer.innerHTML = `<p style="font-size: 30px; color: blue; font-weight: bold; text-align: center; margin-top: 50px">You got ${score} out of ${mcqs.length} questions.</p>`;
+function handleNavigation(direction) {
+    if (direction === 'next') {
+        if (currentQuestion < mcqs.length - 1) {
+            currentQuestion++;
+            showQuestion();
+        } else {
+            endQuiz();
+        }
+    } else if (direction === 'prev') {
+        if (currentQuestion > 0) {
+            currentQuestion--;
+            showQuestion();
+        }
     }
 }
+
+function endQuiz() {
+    const quizContainer = document.querySelector(".quiz-container");
+    quizContainer.innerHTML = `<p style="font-size: 30px; color: blue; font-weight: bold; text-align: center; margin-top: 50px">You got ${score} out of ${mcqs.length} questions.</p>`;
+}
+
+document.querySelector('.next-button').addEventListener('click', () => handleNavigation('next'));
+document.querySelector('.prev-button').addEventListener('click', () => handleNavigation('prev'));
 
 showQuestion();
